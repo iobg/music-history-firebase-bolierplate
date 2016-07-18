@@ -3,29 +3,30 @@
 // It is only concerned with getting and setting data in the db
 
 let $ = require('jquery'),
-    firebase = require("./firebaseConfig");
-
-// ****************************************
-// DB interaction using Firebase REST API
-// ****************************************
+    firebase = require("./firebaseConfig"),
+    fb= require("./fb-getter.js"),
+    fbData = fb();
 
 function getSongs(callback) {
-
+  firebase.database().ref("songs").on("value", function(songData){
+    callback(songData.val());
+  });
 }
 
-function addSong(songFormObj) {
-
+function addSong(newSong) {
+	return firebase.database().ref('songs').push(newSong);
 }
 
 function deleteSong(songId) {
-
+	return firebase.database().ref(`songs/${songId}`).remove();
 }
 
 function getSong(songId) {
-
+	return firebase.database().ref(`songs/${songId}`);
 }
 
 function editSong(songFormObj, songId) {
+	firebase.database().ref(`songs/${songId}`).update(songFormObj);
 
 }
 
@@ -36,35 +37,3 @@ module.exports = {
   deleteSong,
   editSong
 };
-
-// ****************************************
-// DB interaction using Firebase SDK
-// ****************************************
-
-// function getSongs(callback) {
-
-// }
-
-// function addSong(newSong) {
-
-// }
-
-// function deleteSong(songId) {
-
-// }
-
-// function getSong(songId) {
-
-// }
-
-// function editSong(songFormObj, songId) {
-
-// }
-
-// module.exports = {
-//   getSongs,
-//   addSong,
-//   getSong,
-//   deleteSong,
-//   editSong
-// };
